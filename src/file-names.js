@@ -11,13 +11,47 @@ const { NotImplementedError } = require('../extensions/index.js');
  * @return {Array}
  *
  * @example
- * For input ["file", "file", "image", "file(1)", "file"],
- * the output should be ["file", "file(1)", "image", "file(1)(1)", "file(2)"]
+ * For input            ["file", "file",    "image", "file(1)",    "file"],
+ * the output should be ["file", "file1", "image", "file(1)1", "file2"]
  *
  */
-function renameFiles(/* names */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+
+ function renameFiles(names) {
+  const nameArr = [...names];
+  const maskArr = new Array(names.length);
+  const countArr = new Array(names.length);
+  let test, indexMask;
+
+  for(let i =0; i < nameArr.length; i++) {
+    count = 1;
+
+            indexMask = unIndex(nameArr[i],maskArr)
+            if(indexMask >= 0) {
+                if(nameArr[i] == nameArr[indexMask]) {
+                    countArr[i] = countArr[indexMask] + count;
+                } else {
+                    countArr[i] = countArr[indexMask];
+                }
+                test = maskArr.indexOf(nameArr[i]+'('+countArr[i]+')');
+                if(test < 0) {
+                    maskArr[i] =  nameArr[i]+'('+countArr[i]+')';
+                } else {
+                    ++count
+                    maskArr[i] =  nameArr[i]+'('+count+')';
+                }
+
+            } else {
+                countArr[i] = 0;
+                maskArr[i] = nameArr[i];
+            }
+
+        function unIndex(name,arr=maskArr) {
+            return arr.lastIndexOf(name)
+        }
+
+  }
+  return maskArr;
+
 }
 
 module.exports = {
